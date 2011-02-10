@@ -83,15 +83,7 @@ class Line:
 		filmName = "" 
 		year = 0
 		disamb = 0
-		role = ""
 		filmString = self._tokenize(" ")
-		# if it contains one of these, it's not a film. (VG) == video game
-		if (filmString.__len__() == 1):
-			if (filmString[0] != '\n'):
-				print "non-empty?", filmString
-			return None
-		if (filmString.count("(VG)") > 0):
-			return None
 		# cleaning up for processing
 		# empty items, tabs in the first item, newlines in the last one
 		empties = filmString.count("")
@@ -99,65 +91,14 @@ class Line:
 			filmString.remove("")
 		filmString[0] = filmString[0].replace("\t", "")
 		filmString[-1] = filmString[-1].replace("\n", "")
-	
-		# These if-statements check for optional items in the list
-		# and if they are there, they remove the from the array, and 
-		# convert them into an integer or string.
-#		print "VVVVVVVVVVVVV"
-#		print self.line
-#		print filmString
-#		print filmName, year
 		if (re.search("<\d+>", filmString[-1])): # fx. <25>. I _think_ this is disambiguation
-			disamb = int(filmString.pop().replace("<", "").replace(">", ""))
-#			print disamb, "disamb"
-#			print filmString
-		# Remove multi-item []s fx. "Oog in oog" (1991)  [Oudste zoon (1993)]
-		# first search if the last item has ] but not [
-		# then continue until one has [ but not ]
-		# then remove from the [ to ]
-		# it will remove the item in ['s  position, until it reaches the end #a
-		if (re.search("\]", filmString[-1]) and not re.search("\[", filmString[-1])):
-			begining = 0
-			for i in xrange(2, filmString.__len__()):
-				if (re.search("\[", filmString[-i]) and not re.search("\]", filmString[-i])):
-					begining = i
-					break
-			index = - begining 
-			while (True): #a
-				filmString.pop(index)
-				index += 1
-				if (index >= 0):
-					break
-		if (re.search("\[.+\]", filmString[-1])): # fx. [Himself].
-			role = filmString.pop().replace("[", "").replace("]", "")
-#			print role, "role"
-#			print filmString
-		if (re.search("\(w+\)", filmString[-1])): # fx. (v)
-			filmType = filmString.pop().replace("(", "").replace(")", "")
-#			print filmType, "filmType"
-#			print filmString
-		if (re.search("{.+}", filmString[-1])): # fx. {(#10.1)},  used for TV shows.
-			filmString.pop()
-#			print filmString.pop(), "episode"
-		if (re.search("\(\d+\)", filmString[-1])): #fx (1986)
-			try:
-				year = int(filmString.pop().replace("(", "").replace(")", ""))	
-			except:
-				print self.line
-				print filmString
-				print year
-#			print year, "year"
-#			print filmString
-		# strigify the rest of the array ( should be the film name )
-		for i in filmString:
-			filmName = filmName + i + " "
-		filmName = filmName.strip()
-#		print
-#		print
-#		print "_____________"
-
-
-		return Film(filmName, year, disamb)
+			disamb = int(filmString.pop().replace("<", "").replace(">", ""))		
+		for item in filmString:
+			filmName = filmName + " " + i
+			if (re.search("\(\d+\)", item)): #fx (1986)
+				year = int(i.replace("(", "").replace(")", ""))
+				break
+		return Film(filmName.strip(), year, disamb)
 	
 	
 	def _tokenize(self, s):
@@ -196,7 +137,85 @@ while True:
 		l.getFilm()
 
 
-
+#	def getFilm(self):
+#		filmName = "" 
+#		year = 0
+#		disamb = 0
+#		role = ""
+#		filmString = self._tokenize(" ")
+#		# if it contains one of these, it's not a film. (VG) == video game
+#		if (filmString.__len__() == 1):
+#			if (filmString[0] != '\n'):
+#				print "non-empty?", filmString
+#			return None
+#		if (filmString.count("(VG)") > 0):
+#			return None
+#		# cleaning up for processing
+#		# empty items, tabs in the first item, newlines in the last one
+#		empties = filmString.count("")
+#		for i in xrange(0, empties):
+#			filmString.remove("")
+#		filmString[0] = filmString[0].replace("\t", "")
+#		filmString[-1] = filmString[-1].replace("\n", "")
+#	
+#		# These if-statements check for optional items in the list
+#		# and if they are there, they remove the from the array, and 
+#		# convert them into an integer or string.
+#		print "VVVVVVVVVVVVV"
+#		print self.line
+#		print filmString
+#		print filmName, year
+#		if (re.search("<\d+>", filmString[-1])): # fx. <25>. I _think_ this is disambiguation
+#			disamb = int(filmString.pop().replace("<", "").replace(">", ""))
+#			print disamb, "disamb"
+#			print filmString
+#		# Remove multi-item []s fx. "Oog in oog" (1991)  [Oudste zoon (1993)]
+#		# first search if the last item has ] but not [
+#		# then continue until one has [ but not ]
+#		# then remove from the [ to ]
+#		# it will remove the item in ['s  position, until it reaches the end #a
+#		if (re.search("\]", filmString[-1]) and not re.search("\[", filmString[-1])):
+#			begining = 0
+#			for i in xrange(2, filmString.__len__()):
+#				if (re.search("\[", filmString[-i]) and not re.search("\]", filmString[-i])):
+#					begining = i
+#					break
+#			index = - begining 
+#			while (True): #a
+#				filmString.pop(index)
+#				index += 1
+#				if (index >= 0):
+#					break
+#		if (re.search("\[.+\]", filmString[-1])): # fx. [Himself].
+#			role = filmString.pop().replace("[", "").replace("]", "")
+#			print role, "role"
+#			print filmString
+#		if (re.search("\(w+\)", filmString[-1])): # fx. (v)
+#			filmType = filmString.pop().replace("(", "").replace(")", "")
+#			print filmType, "filmType"
+#			print filmString
+#		if (re.search("{.+}", filmString[-1])): # fx. {(#10.1)},  used for TV shows.
+#			filmString.pop()
+#			print filmString.pop(), "episode"
+#		if (re.search("\(\d+\)", filmString[-1])): #fx (1986)
+#			try:
+#				year = int(filmString.pop().replace("(", "").replace(")", ""))	
+#			except:
+#				print self.line
+#				print filmString
+#				print year
+#			print year, "year"
+#			print filmString
+#		# strigify the rest of the array ( should be the film name )
+#		for i in filmString:
+#			filmName = filmName + i + " "
+#		filmName = filmName.strip()
+#		print
+#		print
+#		print "_____________"
+#
+#
+#		return Film(filmName, year, disamb)
 
 
 #def detectNewActor(line):
