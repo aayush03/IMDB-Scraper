@@ -1,6 +1,8 @@
-import scraper
+from scraper import goToData, Line, Film, Actor
+
 f = open("actors.list", "r")
 lineNo = 0
+
 goToData(f)
 while True:
 	l = Line(f.readline())
