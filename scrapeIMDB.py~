@@ -1,10 +1,7 @@
-import scraper
-f = open("actors.list", "r")
-lineNo = 0
+import 
 goToData(f)
 while True:
 	l = Line(f.readline())
-        print l.line
 	if (l.endOfData()):
 		break
 	elif (l.containsActorName()):
