@@ -1,5 +1,7 @@
 import re
 from roman import fromRoman as roman2int
+from actor import Actor
+from film import Film
 
 class Line:
 	line = ""

@@ -1,4 +1,5 @@
-from scraper import goToData, Line, Film, Actor
+from utils import goToData
+from line import Line
 
 f = open("actors.list", "r")
 lineNo = 0
