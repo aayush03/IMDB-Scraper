@@ -1,0 +1,7 @@
+IMDB provides various alternative interfaces for their database(http://www.imdb.com/interfaces).
+
+One of them is the plain text version(ftp://ftp.fu-berlin.de/pub/misc/movies/database/, ftp://ftp.funet.fi/pub/mirrors/ftp.imdb.com/pub/ and ftp://ftp.sunet.se/pub/tv+movies/imdb/)
+
+This script is designed to scrape though the actors.list and actresses.list files and get the actor name and each actor's film name.
+
+It is purly a scraper, and you need to extend it to fit your needs. Particularly, this script doesn't save the data anywhere. An example might be provided in the future.

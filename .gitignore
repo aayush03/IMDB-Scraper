@@ -1,2 +1,4 @@
 *.list
 *.pyc
+*.pyc~
+*.py~

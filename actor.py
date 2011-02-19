@@ -1,4 +1,4 @@
-class Actor:
+class Actor():
 	surname = ""
 	firstnames = []
 	films = []

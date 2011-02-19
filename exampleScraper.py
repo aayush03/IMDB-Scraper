@@ -1,7 +1,9 @@
+#Example scraper. Doesn't acctually save anything.
+import sys
 from utils import goToData
 from line import Line
 
-f = open("actors.list", "r")
+f = open(sys.argv[1], "r")
 lineNo = 0
 
 goToData(f)
@@ -15,3 +17,4 @@ while True:
 		actor.addFilm(film)
 	else:
 		l.getFilm()
+		actor.addFilm(l.getFilm())
