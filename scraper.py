@@ -1,15 +1,14 @@
 import re
 from roman import fromRoman as roman2int
 f = open("actors.list", "r")
-
+lineNo = 0
 class Film:
 	name = ""
 	year = 0
-	disambiguation = 0
-	def __init__(self, filmName, filmYear, disamb):
+	def __init__(self, filmName, filmYear):
 		self.name = filmName
 		self.year = filmYear
-		self.disambiguation = disamb
+
 	
 
 class Actor:
@@ -57,11 +56,12 @@ class Line:
 			if (re.search("\(|\)", lastItem)):
 				disamb = lastItem.replace("(", "").replace(")", "")
 				try: # I'm not sure if it's always a roman numeral, or if sometimes it's a number
-					disamb = int(disamb) # either case, it should work.
-				except ValueError:
-					disamb = roman2int(disamb)
+					disamb = roman2int(disamb) # either case, it should work.:
 				except:
 					disamb = 0
+					print actorName
+					print self.line
+					print lineNo
 				actorName.pop() #defaults to the last, so we don't need an index
 			else:
 				disamb = 0
@@ -82,24 +82,30 @@ class Line:
 	def getFilm(self):
 		filmName = "" 
 		year = 0
-		disamb = 0
 		filmString = self._tokenize(" ")
 		# cleaning up for processing
 		# empty items, tabs in the first item, newlines in the last one
 		empties = filmString.count("")
 		for i in xrange(0, empties):
 			filmString.remove("")
+		if (filmString.__len__() <= 1): # all films have a title and a year
+			return None
 		filmString[0] = filmString[0].replace("\t", "")
 		filmString[-1] = filmString[-1].replace("\n", "")
-		if (re.search("<\d+>", filmString[-1])): # fx. <25>. I _think_ this is disambiguation
-			disamb = int(filmString.pop().replace("<", "").replace(">", ""))		
 		for item in filmString:
-			filmName = filmName + " " + i
-			if (re.search("\(\d+\)", item)): #fx (1986)
-				year = int(i.replace("(", "").replace(")", ""))
-				break
-		return Film(filmName.strip(), year, disamb)
-	
+			filmName = filmName + " " + item
+			if (re.search("\(\d{4}.*\)", item)): #fx (1986) or (2010/I)
+				try:
+					# find 4 numbers followed zero or more any-character,
+					# all of which is surrounded by ()s,
+					# then capture the 4 numbers.
+					# re.findall returns a list, we want the first item, hence the [0]
+					year = re.findall("\((\d{4}).*\)", item)[0]
+#					year = int(item.replace("(", "").replace(")", ""))
+					break
+				except:
+					print filmString, item
+		return Film(filmName.strip(), year)
 	
 	def _tokenize(self, s):
 		return self.line.split(s)
@@ -122,14 +128,17 @@ def testLine(line):
 	test.getFilm()
 testLine('"The Bonnie Hunt Show" (2008) {(2010-03-24)}  [Himself]')
 testLine('"Oog in oog" (1991)  [Oudste zoon (1993)]')
-testLine('"Au th��tre ce soir" (1966) {La coquine (1981)}  [Le valet de chambre]  <8>')
-testLine('')
+testLine('!Grant, Cary|Notorious (1992) (TV)|')
 
 #while(True): pass
+f.close()
+f = open("tail_actors.list")
+
 
 goToData(f)
 while True:
 	l = Line(f.readline())
+	lineNo += 1
 	if (l.containsActorName()):
 		actor, film = l.getActorAndFilm()
 		actor.addFilm(film)
