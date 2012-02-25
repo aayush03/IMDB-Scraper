@@ -28,7 +28,7 @@ class Line:
 			# surname is the 0th item in actorName
 			# the surname is followed by a ',' that we need to remove
 			# and the we remove the surnams from actorName
-			surname = actorName.pop(0).replace(',', '')
+			surname = actorName.pop(0).replace(',', '').strip().strip("'")
 			# the last item may be a disambiguation number. Fx. (II)
 			# we need to capture it, if it's there, and then remove it from actorName
 			lastItem = actorName[-1]	
@@ -65,7 +65,7 @@ class Line:
 		filmString[0] = filmString[0].replace("\t", "")
 		filmString[-1] = filmString[-1].replace("\n", "")
 		for item in filmString:
-			filmName = filmName + " " + item
+			# first check if the item is the year
 			if (re.search("\(\d{4}.*\)", item)): #fx (1986) or (2010/I)
 				try:
 					# find 4 numbers followed zero or more any-character,
@@ -76,7 +76,10 @@ class Line:
 					break
 				except:
 					print filmString, item
-		return Film(filmName.strip(), year)
+#			print filmName
+			filmName = filmName + " " + item
+#		print filmName, year
+		return Film(filmName.strip().strip('"'), year)
 
 	def endOfData(self):
 		if (self.line.startswith("-----------------------------------------------")):
