@@ -4,9 +4,9 @@ from actor import Actor
 from film import Film
 
 class Line:
-	line = ""
-	def __init__(self, string):
-		self.line = string
+	def __init__(self, line):
+		self.line = line
+		
 	def getActorAndFilm(self):
 		l = self._tokenize("\t")
 		actor = Line(l[0]).getActor()
